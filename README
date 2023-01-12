@@ -1,0 +1,23 @@
+INSTRUCTIONS:
+	MAKE:
+		Make has 3 targets: all, clean and enable. 'make' will prepare files for loading, 
+		'make enable' will load the module, clear dmesg log and compile the suerspace 
+		app as 'kic'. 'make clean will unload the module and remove non-source files.;
+
+	KIC MODULE:
+		Module itself reports on it's workings in dmesg log, should no errors occur 
+		messeging will be sparse. Default IRQ line requested by the module is 1. 
+
+	KIC USER:
+		Command line app has 2 modes of interaction. It can either be called without
+		arguments, upon which it opens a menu with options listed (mutiple queries
+		are allowed) or with one of the following arguments: count, time, reset.
+		Either argument will cause the app to return only one line of text and exit.
+		'count' returns the current count, 'reset' resets the counter and time returns
+		the time and date of last reset since loading the module. 
+
+ISSUES:
+	> Should the keyboard send IRQs to a different line than 1, a change in 
+	  keyboard_interrupt_counter.h will be necessary. IRQ line used is represented by
+	  KEYBOARD_IRQ macro. Other modules also need to share this line, module will not 
+	  work unless those conditions are met.
