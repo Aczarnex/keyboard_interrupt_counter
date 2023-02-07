@@ -64,7 +64,6 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-
 int retrieve_count(int file_descriptor)
 {
 	int result;

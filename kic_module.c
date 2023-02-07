@@ -30,7 +30,6 @@ static struct class *kic_cls;
 static atomic64_t kic_interrupt_count = ATOMIC_INIT(0);	// count of interrupts
 static ktime_t kic_time = 0;		// time and date of last counter reset
 
-
 /*
  * prototypes for purpose-specific functions
  */

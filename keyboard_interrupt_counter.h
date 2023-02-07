@@ -1,4 +1,4 @@
-#include<linux/ioctl.h>
+#include <linux/ioctl.h>
 
 #define KIC_DEVICE_NAME "keyboard_interrupt_counter"
 
