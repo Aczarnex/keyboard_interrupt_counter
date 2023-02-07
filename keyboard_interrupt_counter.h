@@ -6,7 +6,7 @@
 
 #define KIC_DEVICE_PATH "/dev/keyboard_interrupt_counter"
 
-#define KIC_GET_COUNT_QUERY _IOR(KIC_MAJOR, 0, unsigned int *)
+#define KIC_GET_COUNT_QUERY _IOR(KIC_MAJOR, 0, unsigned long int *)
 #define KIC_GET_TIME_QUERY _IOR(KIC_MAJOR, 1, long int *)
 #define KIC_RESET_QUERY _IO(KIC_MAJOR, 2)
 
