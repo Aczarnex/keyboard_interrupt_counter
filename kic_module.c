@@ -15,6 +15,10 @@
 
 #include "keyboard_interrupt_counter.h"
 
+#define KIC_DEVICE_NAME "keyboard_interrupt_counter"
+#define KEYBOARD_IRQ 1 		//modify accordingly if needed
+#define KIC_IRQ_FLAGS IRQF_SHARED
+
 MODULE_LICENSE("GPL");
 
 /*
@@ -30,9 +34,6 @@ static struct class *kic_cls;
 static atomic64_t kic_interrupt_count = ATOMIC_INIT(0);	// count of interrupts
 static ktime_t kic_time = 0;		// time and date of last counter reset
 
-/*
- * prototypes for purpose-specific functions
- */
 static irqreturn_t kic_increment(int, void *);
 static void kic_reset(void);
 
@@ -47,6 +48,7 @@ static int kic_device_open(struct inode *inode, struct file *file)
 	try_module_get(THIS_MODULE);
 	return 0;
 }
+
 /*
  * maintains reference count, invoked by ioctl protocol
  */
@@ -56,6 +58,7 @@ static int kic_device_release(struct inode *inode, struct file *file)
 	module_put(THIS_MODULE);
 	return 0;
 }
+
 /*
  * maintains exclusive access to the device and provides communication with
  * userspace
@@ -80,10 +83,9 @@ static long kic_device_ioctl(struct file *file, unsigned int ioctl_mode,
 
 		if (copy_to_user((void __user *)ioctl_carry, (void *)&kic_carry,
 				 sizeof(long long)) != 0)
-				pr_alert("KIC: Copy to user failed.\n");
-			else
-				pr_info("KIC: Count retrieved at %lld.\n",
-					 kic_carry);
+			pr_alert("KIC: Copy to user failed.\n");
+		else
+			pr_info("KIC: Count retrieved at %lld.\n", kic_carry);
 		break;
 	}// case closed
 	case KIC_GET_TIME_QUERY: {	// option for retrieving time and date
@@ -107,9 +109,8 @@ static struct file_operations fops = {
 	.release = kic_device_release,
 	.unlocked_ioctl = kic_device_ioctl,
 };
+
 /*
- * purpose specific functions
- *
  * increases count upon detecting a valid interrupt
  */
 static irqreturn_t kic_increment(int irq, void *dev_id)
