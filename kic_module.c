@@ -15,9 +15,9 @@
 
 #include "keyboard_interrupt_counter.h"
 
-#define KIC_DEVICE_NAME "keyboard_interrupt_counter"
 #define KEYBOARD_IRQ 1 		//modify accordingly if needed
 #define KIC_IRQ_FLAGS IRQF_SHARED
+#define MAKE_DEV MKDEV(KIC_MAJOR, 0)
 
 MODULE_LICENSE("GPL");
 
@@ -152,13 +152,13 @@ static int __init kic_init(void)
 	 * may be slightly confusing, casting required for comparison,
 	 * pointer returned from device_create is useful only for error handling
 	 */
-	if ((void *)(device_create(kic_cls, NULL, MKDEV(KIC_MAJOR, 0), NULL,
+	if ((void *)(device_create(kic_cls, NULL, MAKE_DEV, NULL,
 	    KIC_DEVICE_NAME)) == ERR_PTR) {
 		pr_alert("KIC: Creating device failed with error code: %d\n",
 			 irq_ret);
 		goto device_fail;
 	}
-	pr_info("KIC: Device created on /dev/%s\n", KIC_DEVICE_NAME);
+	pr_info("KIC: Device created on %s\n", KIC_DEVICE_PATH);
 
 	irq_ret = request_irq(KEYBOARD_IRQ, kic_increment, KIC_IRQ_FLAGS,
 			      KIC_DEVICE_NAME, (void *)kic_cls);
@@ -172,7 +172,7 @@ static int __init kic_init(void)
 	return irq_ret;
 
 	irq_fail:
-		device_destroy(kic_cls, MKDEV(KIC_MAJOR, 0));
+		device_destroy(kic_cls, MAKE_DEV);
 	device_fail:
 		class_destroy(kic_cls);
 	class_fail:
@@ -189,7 +189,7 @@ static void __exit kic_exit(void)
 {
 	synchronize_irq(KEYBOARD_IRQ);
 	free_irq(KEYBOARD_IRQ, (void *)kic_cls);
-	device_destroy(kic_cls, MKDEV(KIC_MAJOR, 0));
+	device_destroy(kic_cls, MAKE_DEV);
 	class_destroy(kic_cls);
 	unregister_chrdev(KIC_MAJOR, KIC_DEVICE_NAME);
 	pr_info("KIC: Removal Complete. KIC Module Unloaded\n");

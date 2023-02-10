@@ -32,3 +32,6 @@ ISSUES:
 	assigned manually. The module itself does not support dynamic assignment.
 	Major number is represented by KIC_MAJOR macro in
 	keyboard_interrupt_counter.h file.
+	 Running the app may require sudo privileges. If the following error
+	messege occurs: "Device:/dev/keyboard_interrupt_counter inaccesible or
+	missing. Error Code: -1" it is likely the case.

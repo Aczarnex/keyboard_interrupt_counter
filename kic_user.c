@@ -126,6 +126,9 @@ void menu(int desc)
 		printf("Choose option: ");
 		scanf("%d", &flag);
 		switch(flag) {
+		case 0:
+			printf("Goodbye.\n");
+			break;
 		case 1:
 			retrieve_count(desc);
 			break;
@@ -134,9 +137,6 @@ void menu(int desc)
 			break;
 		case 3:
 			retrieve_time(desc);
-			break;
-		case 0:
-			printf("Goodbye.\n");
 			break;
 		default:
 			printf("Invalid choice.\n");
